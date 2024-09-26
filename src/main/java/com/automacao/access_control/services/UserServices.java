@@ -1,12 +1,12 @@
-package com.automacao.acess_control.services;
+package com.automacao.access_control.services;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.automacao.acess_control.entities.User;
-import com.automacao.acess_control.repositories.UserRepository;
+import com.automacao.access_control.entities.User;
+import com.automacao.access_control.repositories.UserRepository;
 
 @Service
 public class UserServices {

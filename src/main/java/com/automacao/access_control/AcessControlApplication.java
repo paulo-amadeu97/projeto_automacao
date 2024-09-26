@@ -1,4 +1,4 @@
-package com.automacao.acess_control;
+package com.automacao.access_control;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

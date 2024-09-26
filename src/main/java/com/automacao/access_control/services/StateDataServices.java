@@ -1,12 +1,12 @@
-package com.automacao.acess_control.services;
+package com.automacao.access_control.services;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.automacao.acess_control.entities.StateData;
-import com.automacao.acess_control.repositories.StateDataRepository;
+import com.automacao.access_control.entities.StateData;
+import com.automacao.access_control.repositories.StateDataRepository;
 
 @Service
 public class StateDataServices {

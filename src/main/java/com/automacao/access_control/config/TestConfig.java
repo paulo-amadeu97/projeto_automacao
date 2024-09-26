@@ -1,4 +1,4 @@
-package com.automacao.acess_control.config;
+package com.automacao.access_control.config;
 
 import java.util.Arrays;
 
@@ -7,10 +7,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.automacao.acess_control.entities.StateData;
-import com.automacao.acess_control.entities.User;
-import com.automacao.acess_control.repositories.StateDataRepository;
-import com.automacao.acess_control.repositories.UserRepository;
+import com.automacao.access_control.entities.StateData;
+import com.automacao.access_control.entities.User;
+import com.automacao.access_control.repositories.StateDataRepository;
+import com.automacao.access_control.repositories.UserRepository;
 
 @Configuration
 @Profile("test")

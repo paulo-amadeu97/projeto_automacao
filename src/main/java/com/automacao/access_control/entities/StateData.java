@@ -1,4 +1,4 @@
-package com.automacao.acess_control.entities;
+package com.automacao.access_control.entities;
 
 import java.io.Serializable;
 import java.time.Instant;

@@ -1,4 +1,4 @@
-package com.automacao.acess_control.resources;
+package com.automacao.access_control.resources;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.automacao.acess_control.entities.StateData;
-import com.automacao.acess_control.repositories.StateDataRepository;
+import com.automacao.access_control.entities.User;
+import com.automacao.access_control.repositories.UserRepository;
 
 @Controller
-@RequestMapping(value = "/statedata")
-public class StateDataResource {
+@RequestMapping(value = "/user")
+public class UserResource {
 	
 	@Autowired
-	private StateDataRepository repository;
+	private UserRepository repository;
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<StateData> findById(@PathVariable Long id){
-		StateData obj = repository.findById(id).orElse(null);
+	public ResponseEntity<User> findById(@PathVariable Long id){
+		User obj = repository.findById(id).orElse(null);
 		if(obj != null) {
 			return ResponseEntity.ok().body(obj);
 		}
@@ -29,8 +29,8 @@ public class StateDataResource {
 	}
 	
 	@PostMapping("/")
-	public ResponseEntity<Void> saveStateData(@RequestBody StateData data) {
-		StateData obj = new StateData(data);
+	public ResponseEntity<Void> saveUser(@RequestBody User data) {
+		User obj = new User(data);
 		repository.save(obj);
 		return ResponseEntity.ok().build();
 	}

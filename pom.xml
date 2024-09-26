@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.automacao</groupId>
-	<artifactId>acess_control</artifactId>
+	<artifactId>access_control</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>acess_control</name>
