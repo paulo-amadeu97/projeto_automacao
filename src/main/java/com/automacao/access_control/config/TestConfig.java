@@ -7,30 +7,36 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.automacao.access_control.dto.RegisterDTO;
 import com.automacao.access_control.entities.StateData;
-import com.automacao.access_control.entities.User;
+import com.automacao.access_control.enuns.UserPermissions;
 import com.automacao.access_control.repositories.StateDataRepository;
 import com.automacao.access_control.repositories.UserRepository;
+import com.automacao.access_control.resources.AuthenticationResource;
 
 @Configuration
 @Profile("test")
 public class TestConfig implements CommandLineRunner{
 
 	@Autowired
-	StateDataRepository stateDataRepository;
+	private StateDataRepository stateDataRepository;
 	
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
+	
+	@Autowired
+	private AuthenticationResource auth = new AuthenticationResource();
 	
 	@Override
 	public void run(String... args) throws Exception {
 		
 		StateData stdt1 = new StateData(35.0, 60.0);
 		
-		User user1 = new User("Paulo Mendonca", "paulo.mendonca@gmail.com", "12345678", null);
+		RegisterDTO registerTest = new RegisterDTO("Usuario teste", "teste@teste.com", "12345678", UserPermissions.ADMIN);
+		
+		auth.register(registerTest);
 		
 		stateDataRepository.saveAll(Arrays.asList(stdt1));
-		userRepository.saveAll(Arrays.asList(user1));
 		
 	}
 }

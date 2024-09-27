@@ -4,10 +4,20 @@ import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.automacao.access_control.enuns.UserPermissions;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,30 +26,34 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_user")
-public class User implements Serializable{
+public class User implements Serializable, UserDetails{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	
+	@Column(unique = true)
 	private String email;
 	private String password;
 	private char status = 'A';
 	private Instant dateCreate;
 	private Long userCreateId;
 	
+	private UserPermissions permissions;
+	
 	public User() {
 		
 	}
 
-	public User(String name, String email, String password, Long userCreateId) {
+	public User(String name, String email, String password, UserPermissions permission) {
 		super();
 		this.name = name;
 		this.setEmail(email);;
-		this.setPassword(password);
+		this.password = password;
 		this.dateCreate = Instant.now();
-		this.userCreateId = userCreateId;
+		this.permissions = permission;
 	}
 	
 	public User(User data) {
@@ -76,28 +90,12 @@ public class User implements Serializable{
 		return password;
 	}
 
-	public void setPassword(String password) {
-		if(password == null) {
-			throw new IllegalArgumentException("Password cannot be null");
-		} else {
-			String passRegex = "^[a-zA-Z0-9]{8,}$";
-			Pattern pattern = Pattern.compile(passRegex);
-			Matcher matcher = pattern.matcher(password);
-			if(matcher.matches()) {
-				this.password = this.encryptPassword(password);
-			} else {
-				throw new IllegalArgumentException("Password is invalid. It must have at least 8 alphanumeric characters");
-			}
-		}
-		
-	}
-
 	public char getStatus() {
 		return status;
 	}
 
 	public void setStatus(char status) {
-		if(status != 'I' || status != 'A') {
+		if(status != 'I' && status != 'A') {
 			throw new IllegalArgumentException("Status Invalid");
 		} else {
 			this.status = status;
@@ -137,30 +135,23 @@ public class User implements Serializable{
 		return matcher.matches();
 	}
 	
-	private String encryptPassword(String password) {
-		try {
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			
-			byte[] hash = digest.digest(password.getBytes());
-			
-			StringBuilder hexString = new StringBuilder();
-			
-			for(byte b : hash) {
-				String hex = Integer.toHexString(0xff & b);
-				if (hex.length() == 1) {
-					hexString.append('0');
-				}
-				hexString.append(hex);
-			}
-			
-			return hexString.toString();
-			
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("error to encrypt", e);
-		}
-	}
 
 	public Instant getDateCreate() {
 		return dateCreate;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		if(this.permissions == UserPermissions.ADMIN) {
+			return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+		} else {
+			return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+		}
+	}
+
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return this.email;
 	}
 }
