@@ -1,14 +1,13 @@
 package com.automacao.access_control.resources;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.automacao.access_control.entities.User;
 import com.automacao.access_control.repositories.UserRepository;
 
@@ -27,6 +26,20 @@ public class UserResource {
 		}
 		return ResponseEntity.notFound().build();
 	}
+	
+	@GetMapping(value = "/rfid/{rfid}")
+	public ResponseEntity<User> findByRfid(@PathVariable String rfid) {
+	    UserDetails userDetails = repository.findByRfid(rfid);
+	    if (userDetails == null) {
+	        return ResponseEntity.notFound().build();
+	    }
+	    if (userDetails instanceof User user) {
+	        return ResponseEntity.ok().body(user);
+	    }
+	    return ResponseEntity.notFound().build();
+	}
+
+
 	
 	@PostMapping("/")
 	public ResponseEntity<Void> saveUser(@RequestBody User data) {

@@ -25,9 +25,15 @@ public class SecurityConfigurations {
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 		return httpSecurity
 				.csrf(csrf -> csrf.disable())
+				.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize
+						.requestMatchers(HttpMethod.POST, "/h2-console/*").permitAll()
+						.requestMatchers(HttpMethod.GET, "/h2-console/*").permitAll()
 						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+						.requestMatchers(HttpMethod.POST, "/access").permitAll()
+						.requestMatchers(HttpMethod.POST, "/access/").permitAll()
+						.requestMatchers(HttpMethod.GET, "/user/rfid/{rfid}").hasRole("USER")
 						.requestMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.GET, "/user/{id}").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.POST, "/user").hasRole("ADMIN")
@@ -46,5 +52,4 @@ public class SecurityConfigurations {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
 }

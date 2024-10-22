@@ -1,12 +1,7 @@
 package com.automacao.access_control.repositories;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.automacao.access_control.entities.AccessLog;
-import com.automacao.access_control.entities.StateData;
 
-public interface StateDataRepository extends JpaRepository<StateData, Long>{
-
-	void save(AccessLog obj);
+public interface AccessLogRepository extends JpaRepository<AccessLog, Long>{
 
 }

@@ -37,7 +37,7 @@ public class AuthenticationResource {
 	private TokenService tokenService;
 
 	@PostMapping("/login")
-	public ResponseEntity login(@RequestBody @Valid  AuthenticationDTO data) {
+	public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid  AuthenticationDTO data) {
 		var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
 		var auth = this.authenticationManager.authenticate(usernamePassword);
 		
@@ -47,7 +47,7 @@ public class AuthenticationResource {
 	}
 	
 	@PostMapping("/register")
-	public ResponseEntity register(@RequestBody @Valid RegisterDTO data) {
+	public ResponseEntity<RegisterDTO> register(@RequestBody @Valid RegisterDTO data) {
 		if(this.repository.findByEmail(data.email()) != null) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -64,6 +64,7 @@ public class AuthenticationResource {
 			
 			String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
 			User newUser = new User(data.name(), data.email(), encryptedPassword, data.permission());
+			newUser.setRfid(data.rfid());
 			
 			this.repository.save(newUser);
 			

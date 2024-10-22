@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Profile;
 
 import com.automacao.access_control.dto.RegisterDTO;
 import com.automacao.access_control.entities.StateData;
+import com.automacao.access_control.entities.User;
 import com.automacao.access_control.enuns.UserPermissions;
 import com.automacao.access_control.repositories.StateDataRepository;
 import com.automacao.access_control.repositories.UserRepository;
@@ -25,7 +26,7 @@ public class TestConfig implements CommandLineRunner{
 	private UserRepository userRepository;
 	
 	@Autowired
-	private AuthenticationResource auth = new AuthenticationResource();
+	private AuthenticationResource auth;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -34,9 +35,10 @@ public class TestConfig implements CommandLineRunner{
 		
 		RegisterDTO registerTest = new RegisterDTO("Usuario teste", "teste@teste.com", "12345678", UserPermissions.ADMIN);
 		
+		registerTest = registerTest.withRfid("ABC123");
+		
 		auth.register(registerTest);
 		
 		stateDataRepository.saveAll(Arrays.asList(stdt1));
-		
 	}
 }

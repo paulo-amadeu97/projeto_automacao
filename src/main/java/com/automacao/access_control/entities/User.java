@@ -37,6 +37,9 @@ public class User implements Serializable, UserDetails{
 	@Column(unique = true)
 	private String email;
 	private String password;
+	
+	@Column(unique = true)
+	private String rfid;
 	private char status = 'A';
 	private Instant dateCreate;
 	private Long userCreateId;
@@ -76,6 +79,14 @@ public class User implements Serializable, UserDetails{
 
 	public String getEmail() {
 		return email;
+	}
+
+	public String getRfid() {
+		return rfid;
+	}
+
+	public void setRfid(String i) {
+		this.rfid = i;
 	}
 
 	public void setEmail(String email) {
