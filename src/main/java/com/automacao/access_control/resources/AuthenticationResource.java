@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.automacao.access_control.dto.AuthenticationDTO;
+import com.automacao.access_control.dto.EmailAndRfidDTO;
 import com.automacao.access_control.dto.EmailDTO;
 import com.automacao.access_control.dto.LoginResponseDTO;
 import com.automacao.access_control.dto.RegisterDTO;
@@ -37,6 +39,9 @@ public class AuthenticationResource {
 	
 	@Autowired
 	private TokenService tokenService;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 	
 
 	@PostMapping("/login")
@@ -75,16 +80,26 @@ public class AuthenticationResource {
 		}
 	}
 	
-	@PostMapping("/register/rfid")
+	@PostMapping("/register/rfid/")
 	public ResponseEntity<RegisterDTO> registerRfid(@RequestBody @Valid EmailDTO email){
 		if(this.repository.findByEmail(email.email()) == null) {
 			return ResponseEntity.badRequest().build();
 		}
 		
-		User user = this.repository.findByEmailUser(email.email());
+		String url = "http://192.168.43.233/email/";
+		ResponseEntity<Void> response = restTemplate.postForEntity(url, email, Void.class);
 		
-		
-		
-		user.setRfid(rfid);
+		if (response.getStatusCode().is2xxSuccessful()) {
+	        return ResponseEntity.ok().build();
+	    } else {
+	        return ResponseEntity.status(response.getStatusCode()).build();
+	    }
+	}
+	
+	@PostMapping("/register/rfid/esp/")
+	public ResponseEntity<RegisterDTO> registerRfidUser(@RequestBody @Valid EmailAndRfidDTO data){
+		User user = this.repository.findByEmailUser(data.email());
+		user.setRfid(data.rfid());
+		return ResponseEntity.ok().build();
 	}
 }
