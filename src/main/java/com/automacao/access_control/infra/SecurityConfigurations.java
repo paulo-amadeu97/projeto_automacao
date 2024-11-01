@@ -33,6 +33,7 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
 						.requestMatchers(HttpMethod.POST, "/access").permitAll()
 						.requestMatchers(HttpMethod.POST, "/access/").permitAll()
+						.requestMatchers(HttpMethod.POST, "/statedata/").permitAll()
 						.requestMatchers(HttpMethod.GET, "/user/rfid/{rfid}").hasRole("USER")
 						.requestMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.GET, "/user/{id}").hasRole("ADMIN")

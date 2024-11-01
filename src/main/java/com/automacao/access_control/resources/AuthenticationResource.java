@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.automacao.access_control.dto.AuthenticationDTO;
+import com.automacao.access_control.dto.EmailDTO;
 import com.automacao.access_control.dto.LoginResponseDTO;
 import com.automacao.access_control.dto.RegisterDTO;
+import com.automacao.access_control.dto.RfidDTO;
 import com.automacao.access_control.entities.User;
 import com.automacao.access_control.infra.TokenService;
 import com.automacao.access_control.repositories.UserRepository;
@@ -35,6 +37,7 @@ public class AuthenticationResource {
 	
 	@Autowired
 	private TokenService tokenService;
+	
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid  AuthenticationDTO data) {
@@ -70,5 +73,18 @@ public class AuthenticationResource {
 			
 			return ResponseEntity.ok().build();
 		}
+	}
+	
+	@PostMapping("/register/rfid")
+	public ResponseEntity<RegisterDTO> registerRfid(@RequestBody @Valid EmailDTO email){
+		if(this.repository.findByEmail(email.email()) == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		
+		User user = this.repository.findByEmailUser(email.email());
+		
+		
+		
+		user.setRfid(rfid);
 	}
 }

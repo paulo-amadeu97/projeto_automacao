@@ -23,9 +23,6 @@ public class TestConfig implements CommandLineRunner{
 	private StateDataRepository stateDataRepository;
 	
 	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
 	private AuthenticationResource auth;
 	
 	@Override
@@ -35,7 +32,7 @@ public class TestConfig implements CommandLineRunner{
 		
 		RegisterDTO registerTest = new RegisterDTO("Usuario teste", "teste@teste.com", "12345678", UserPermissions.ADMIN);
 		
-		registerTest = registerTest.withRfid("ABC123");
+		registerTest = registerTest.withRfid("c39fe7f6");
 		
 		auth.register(registerTest);
 		
