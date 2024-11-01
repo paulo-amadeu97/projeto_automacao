@@ -98,7 +98,7 @@ public class AuthenticationResource {
 	
 	@PostMapping("/register/rfid/esp/")
 	public ResponseEntity<RegisterDTO> registerRfidUser(@RequestBody @Valid EmailAndRfidDTO data){
-		User user = this.repository.findByEmailUser(data.email());
+		User user = this.repository.findByEmail(data.email());
 		user.setRfid(data.rfid());
 		return ResponseEntity.ok().build();
 	}

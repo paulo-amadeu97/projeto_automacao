@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.automacao.access_control.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Long>{
-	UserDetails findByEmail(String email);
+	User findByEmail(String email);
 	User findByRfid(String rfid);
-	User findByEmailUser(String email);
+	//User findByEmailUser(String email);
 }
