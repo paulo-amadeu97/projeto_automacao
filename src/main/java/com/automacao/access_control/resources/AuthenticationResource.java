@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.metadata.TableMetaDataContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,7 +19,6 @@ import com.automacao.access_control.dto.EmailAndRfidDTO;
 import com.automacao.access_control.dto.EmailDTO;
 import com.automacao.access_control.dto.LoginResponseDTO;
 import com.automacao.access_control.dto.RegisterDTO;
-import com.automacao.access_control.dto.RfidDTO;
 import com.automacao.access_control.entities.User;
 import com.automacao.access_control.infra.TokenService;
 import com.automacao.access_control.repositories.UserRepository;
@@ -81,25 +79,34 @@ public class AuthenticationResource {
 	}
 	
 	@PostMapping("/register/rfid/")
-	public ResponseEntity<RegisterDTO> registerRfid(@RequestBody @Valid EmailDTO email){
-		if(this.repository.findByEmail(email.email()) == null) {
-			return ResponseEntity.badRequest().build();
-		}
-		
-		String url = "http://192.168.43.233/email/";
-		ResponseEntity<Void> response = restTemplate.postForEntity(url, email, Void.class);
-		
-		if (response.getStatusCode().is2xxSuccessful()) {
+	public ResponseEntity<RegisterDTO> registerRfid(@RequestBody @Valid EmailDTO email) {
+	    if (this.repository.findByEmail(email.email()) == null) {
+	        return ResponseEntity.badRequest().build();
+	    }
+
+	    String url = "http://192.168.8.23:80/email/";
+	    String json = String.format("{\"email\": \"%s\"}", email.email());
+	    ResponseEntity<Void> response = restTemplate.postForEntity(url, json, Void.class);
+	    System.out.println(email);
+	    
+	    if (response.getStatusCode().is2xxSuccessful()) {
 	        return ResponseEntity.ok().build();
 	    } else {
+	        System.out.println("Erro ao enviar o email. Status: " + response.getStatusCode());
 	        return ResponseEntity.status(response.getStatusCode()).build();
 	    }
 	}
 	
 	@PostMapping("/register/rfid/esp/")
-	public ResponseEntity<RegisterDTO> registerRfidUser(@RequestBody @Valid EmailAndRfidDTO data){
-		User user = this.repository.findByEmail(data.email());
-		user.setRfid(data.rfid());
-		return ResponseEntity.ok().build();
+	public ResponseEntity<RegisterDTO> registerRfidUser(@RequestBody @Valid EmailAndRfidDTO data) {
+	    User user = this.repository.findByEmail(data.email());
+	    
+	    if (user == null) {
+	        return ResponseEntity.notFound().build();
+	    }
+	    
+	    user.setRfid(data.rfid());
+	    this.repository.save(user);
+	    return ResponseEntity.ok().build();
 	}
 }
