@@ -105,6 +105,10 @@ public class AuthenticationResource {
 	        return ResponseEntity.notFound().build();
 	    }
 	    
+	    if(this.repository.findByRfid(data.rfid()) != null) {
+	    	return ResponseEntity.internalServerError().build();
+	    }
+	    
 	    user.setRfid(data.rfid());
 	    this.repository.save(user);
 	    return ResponseEntity.ok().build();
