@@ -84,7 +84,7 @@ public class AuthenticationResource {
 	        return ResponseEntity.badRequest().build();
 	    }
 
-	    String url = "http://192.168.8.23:80/email/";
+	    String url = "http://192.168.0.30:80/email/";
 	    String json = String.format("{\"email\": \"%s\"}", email.email());
 	    ResponseEntity<Void> response = restTemplate.postForEntity(url, json, Void.class);
 	    System.out.println(email);
